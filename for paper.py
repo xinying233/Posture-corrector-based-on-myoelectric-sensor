@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import serial
-#import easygui as g
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -34,7 +33,7 @@ advertise_service( server_sock, "SampleServer",
 print("Waiting for connection on RFCOMM channel %d" % port)
 
 client_sock, client_info = server_sock.accept()
-print("Accepted connection from ", client_info)
+print("Accepted connection from ", client_info)#配置蓝牙
 
 t = [0] # 数据初始化
 m = [0]
@@ -56,9 +55,8 @@ while True:
           ref = pdata
        if abs(ref-pdata) >= 0.1 and  n % 40 == 0:# 每在40倍数时开始验证是否需要弹窗提醒
           client_sock.send(msg)
-          plt.pause(3)
-          #mes = g.msgbox(msg='你驼背了!', title='SEMG muscle', ok_button='I know, 我已坐好')
-          del t[:] # 弹窗后清空图像和数据
+          plt.pause(3)#停3s调整正确坐姿
+          del t[:] # 弹窗后清空数据
           del m[:]
           i = 0
           n = 0
@@ -66,17 +64,17 @@ while True:
         data = serialport.readline(2) # 读取头两个数据检测是否为验证数据
         while data == b'AA':
           data=serialport.readline(3) # 数据验证成功，读取电压数据
-          if data != '': # 如果数据不为空，则进行绘图
+          if data != '': # 如果数据不为空，则进行数据处理
             print('%s' % (data))
             
             i = i + 1
             n = n + 1
             t.append(i)
             intdata=int(data)
-            pdata=float((intdata-100)/100) # 对原数据进行还原
+            pdata=float((intdata-100)/100) # 对接收到的数据进行还原，还原为0-5V的信号
             round(pdata,2)
             m.append(pdata)
-          plt.pause(0.05)  # 绘图频率
+          plt.pause(0.05)  # 数据接收频率
 
 client_sock.close()
-server_sock.close()
+server_sock.close()#关闭蓝牙
