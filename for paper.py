@@ -53,7 +53,7 @@ while True:
     if n >= 80          :
        if n == 80: # 取第80个点为reference
           ref = pdata
-       if abs(ref-pdata) >= 0.3 and  n % 40 == 0:# 每在40倍数时开始验证是否需要弹窗提醒
+       if abs(ref-pdata) >= 0.15 and  n % 40 == 0:# 每在40倍数时开始验证是否需要弹窗提醒
           client_sock.send(msg)
           plt.pause(3)#停3s调整正确坐姿
           del t[:] # 弹窗后清空数据
